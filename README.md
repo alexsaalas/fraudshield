@@ -2,6 +2,8 @@
 
 FraudShield es un sistema de detección de fraude en transacciones financieras desarrollado en Python utilizando técnicas de machine learning.
 
+---
+
 ## 🎯 Objetivo
 
 Detectar operaciones fraudulentas en un dataset altamente desbalanceado, optimizando el equilibrio entre precisión y recall.
@@ -23,6 +25,7 @@ El proyecto incluye:
   - Recall
   - F1-score
   - ROC-AUC
+  - PR-AUC
 - Optimización del threshold de decisión
 
 ---
@@ -62,80 +65,122 @@ Se aplicaron técnicas como:
 ```bash
 fraudshield/
 ├── data/
-│   ├── raw/              # Datos originales
+│   ├── raw/              # Datos originales (no incluidos)
 │   └── processed/        # Datos preprocesados
 ├── models/               # Modelos entrenados (.pkl)
 ├── src/
-│   ├── load_data.py      # Carga de datos
-│   ├── eda.py            # Análisis exploratorio
-│   ├── preprocess.py     # Limpieza y feature engineering
-│   ├── train.py          # Logistic Regression
+│   ├── load_data.py
+│   ├── eda.py
+│   ├── preprocess.py
+│   ├── train.py
 │   ├── train_random_forest.py
+│   ├── evaluate_model.py
+│   ├── feature_importance.py
+│   ├── compare_models.py
+│   ├── cv_score.py
+│   ├── predict.py
 │   └── threshold_analysis.py
+├── run_all.py
 ├── README.md
 └── requirements.txt
 ## ⚙️ Tecnologías utilizadas
 
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- Imbalanced-learn
-- Joblib
+- Python  
+- Pandas  
+- NumPy  
+- Scikit-learn  
+- Imbalanced-learn  
+- Joblib  
 
 ---
 
 ## 🚀 Ejecución del proyecto
-
 ### 1. Instalar dependencias
-
 ```bash
 pip install -r requirements.txt
-### 2. Preprocesar datos
-
-```bash
+# 2. Preprocesar datos
 python src/preprocess.py
-## 3. Entrenar modelos
+# 3 Entrenamiento de modelos
 python src/train.py
 python src/train_random_forest.py
-
----
-
-## 🔧 Qué se ha corregido
-
-- ✔️ Se han separado los pasos con `###` (mejor lectura)
-- ✔️ Cada bloque de comandos va dentro de ```bash```
-- ✔️ Se evita texto plano (que en GitHub queda mal)
-
----
-
-## 🎯 Resultado
-
-En GitHub se verá así:
-
-- Paso 2 → bloque de código limpio  
-- Paso 3 → bloque separado  
-- Todo ordenado y profesional  
-
----
-## 📌 Validación adicional del modelo
-
-Para reforzar la robustez del proyecto, se añadieron varias capas de validación y análisis:
-
-- **Feature importance** para identificar qué variables influyen más en la detección de fraude
-- **Evaluación ampliada** con ROC-AUC, PR-AUC y matriz de confusión
-- **Comparación formal de modelos** entre Logistic Regression y Random Forest
-- **Cross-validation** para comprobar estabilidad y capacidad de generalización
-- **Threshold tuning** para ajustar la sensibilidad del sistema en un problema altamente desbalanceado
-- **Ejecución unificada del pipeline** mediante un script global
-
----
-
-## 🧪 Scripts adicionales
-
-```bash
-python src/feature_importance.py
+# 4. Evaluación completa
 python src/evaluate_model.py
+# 5. Ejecutar pipeline completo
+python run_all.py
+# SCRIPTS ADICIONALES
+python src/feature_importance.py
 python src/compare_models.py
 python src/cv_score.py
-python run_all.py
+# RESULTADOS CLAVES (explicados)
+El modelo ha sido evaluado utilizando distintas métricas para entender su comportamiento en un problema de fraude altamente desbalanceado.
+
+🔢 Métricas principales
+ROC-AUC: 0.9682
+PR-AUC: 0.6179
+Recall (fraude): ~0.75
+Precision (fraude): ~0.11
+🧠 ¿Qué significan estas métricas?
+🎯 ROC-AUC (0.9682)
+
+Mide la capacidad del modelo para distinguir entre transacciones normales y fraudulentas.
+
+👉 Un valor cercano a 1 indica que el modelo separa muy bien ambos casos.
+👉 En este caso, el rendimiento es muy alto.
+
+⚠️ PR-AUC (0.6179)
+
+Es más relevante en datasets desbalanceados.
+
+👉 Mide la calidad al detectar fraude sin generar demasiados errores.
+👉 Un valor de 0.61 es muy sólido en este tipo de problema.
+
+🚨 Recall (fraude) ~ 75%
+
+Indica el porcentaje de fraudes detectados.
+
+👉 El modelo detecta aproximadamente 3 de cada 4 fraudes.
+
+✔️ Prioriza seguridad
+✔️ Reduce el riesgo de dejar pasar fraude
+
+⚖️ Precision (fraude) ~ 11%
+
+Indica cuántas alertas son realmente fraude.
+
+👉 De cada 100 alertas, ~11 son fraude real.
+
+❗ Es normal debido al fuerte desbalance del dataset
+
+⚠️ Interpretación global
+
+El modelo está optimizado para:
+
+✔️ Detectar la mayor cantidad posible de fraude
+❌ A costa de generar falsas alarmas
+
+👉 En fraude real:
+
+Es mejor investigar una transacción normal que permitir un fraude.
+
+🎛️ Ajuste del threshold
+
+El modelo genera probabilidades y se aplica un threshold:
+
+Threshold estándar: 0.5
+Threshold utilizado: 0.3
+
+👉 Esto permite:
+
+aumentar recall
+detectar más fraude
+reducir falsos negativos
+🧠 Conclusión
+
+El modelo no se basa en reglas simples (como “importe alto = fraude”),
+sino en patrones complejos combinando múltiples variables, como:
+
+comportamiento temporal
+tipo de comercio
+perfil del cliente
+
+Esto permite una detección más realista y cercana a sistemas antifraude reales.
